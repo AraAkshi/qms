@@ -64,7 +64,7 @@ export class QuoteService {
 
   //Edit Existing Quote Data
   //@params - Quote id and to edit description
-  async editPatients(data: {
+  async editQuote(data: {
     patient?: any;
     surgeon?: any;
     surgery?: any;
