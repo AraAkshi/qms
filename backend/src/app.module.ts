@@ -11,6 +11,8 @@ import { SurgeonModule } from './surgeon/surgeon.module';
 import { SurgeryModule } from './surgery/surgery.module';
 import { PatientModule } from './patient/patient.module';
 import { QuoteModule } from './quote/quote.module';
+import { IncrementEntity } from './entities/increment.entity';
+import { IncrementModule } from './increment/increment.module';
 
 @Module({
   imports: [
@@ -20,7 +22,6 @@ import { QuoteModule } from './quote/quote.module';
       host: 'localhost',
       database: 'qms_db',
       password: 'bel123',
-      // "password": 'Belpostgre@123',
       port: 5432,
       entities: [
         SurgeonEntity,
@@ -28,6 +29,7 @@ import { QuoteModule } from './quote/quote.module';
         PatientEntity,
         QuoteEntity,
         UserEntity,
+        IncrementEntity,
       ],
       synchronize: true,
     }),
@@ -35,6 +37,7 @@ import { QuoteModule } from './quote/quote.module';
     SurgeryModule,
     PatientModule,
     QuoteModule,
+    IncrementModule,
   ],
   controllers: [AppController],
   providers: [AppService],
