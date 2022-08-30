@@ -1,30 +1,29 @@
 import {
 	Autocomplete,
 	Grid,
+	styled,
 	Table,
 	TableBody,
-	TableCell,
 	TableContainer,
 	TableHead,
 	TableRow,
 	TextField,
-	Theme,
-	withStyles,
 } from '@mui/material';
+import TableCell, { tableCellClasses } from '@mui/material/TableCell';
+import { AnyARecord } from 'dns';
 import React, { useState } from 'react';
 import { getQuotes } from '../../services/quote';
 import Header from '../layout/Header';
 
-const StyledTableCell = withStyles((theme) => ({
-	head: {
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+	[`&.${tableCellClasses.head}`]: {
 		backgroundColor: theme.palette.common.black,
 		color: theme.palette.common.white,
 	},
-	body: {
-		fontSize: 11,
-		FontFace: 'arial',
+	[`&.${tableCellClasses.body}`]: {
+		fontSize: 12,
 	},
-}))(TableCell);
+}));
 
 function MarketingView() {
 	const [selectedSurgery, setSelectedSurgery] = useState();
@@ -36,13 +35,13 @@ function MarketingView() {
 	]);
 	const [surgeons, setSurgeons] = useState(['Dr.ABC', 'Dr.EFG', 'Dr.DBC']);
 	const [quoteTblVisible, setQuoteTblVisible] = useState(false);
-	const [quote, setQuote] = useState('');
+	const [quote, setQuote] = useState<any>();
 
-	const handleSurgeryChange = (newValue) => {
+	const handleSurgeryChange = (newValue: any) => {
 		setSelectedSurgery(newValue);
 	};
 
-	const handleSurgeonChange = (newValue) => {
+	const handleSurgeonChange = (newValue: any) => {
 		setSelectedSurgeon(newValue);
 	};
 
@@ -50,7 +49,9 @@ function MarketingView() {
 		const quotes = await getQuotes(selectedSurgeon, selectedSurgery);
 	};
 
-	const quotePackage = (quote) => {};
+	const quotePackage = (quote: any) => {
+		console.log(quote);
+	};
 
 	return (
 		<div>
@@ -125,7 +126,7 @@ function MarketingView() {
 													<StyledTableCell>
 														<button
 															className='search-btn'
-															onClick={quotePackage(quote.id)}
+															onClick={() => quotePackage(quote.id)}
 														>
 															QUOTE
 														</button>
