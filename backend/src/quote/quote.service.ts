@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { QuoteEntity } from 'src/entities/quote.entity';
-import { getRepository } from 'typeorm';
+import { DataSource, getRepository } from 'typeorm';
 import { Repository } from 'typeorm/repository/Repository';
 
 @Injectable()
@@ -10,12 +10,14 @@ export class QuoteService {
   constructor(
     @InjectRepository(QuoteEntity)
     private repo: Repository<QuoteEntity>,
+    private dataSource: DataSource,
   ) {}
 
   //Get all Quotes
   async getAllQuotes(): Promise<QuoteEntity[]> {
     this.logger.log('Start getting details for all Quotes');
-    const quotes = await getRepository(QuoteEntity)
+    const quotes = await this.dataSource
+      .getRepository(QuoteEntity)
       .createQueryBuilder('quote')
       .leftJoinAndSelect('quote.patient', 'patient')
       .leftJoinAndSelect('quote.surgeon', 'surgeon')
@@ -30,7 +32,8 @@ export class QuoteService {
   //@params - Quote Id
   async getOneQuote(quoteID: number): Promise<QuoteEntity> {
     this.logger.log(`Start getting details for quote with Id - ${quoteID}`);
-    const quote = await getRepository(QuoteEntity)
+    const quote = await this.dataSource
+      .getRepository(QuoteEntity)
       .createQueryBuilder('quote')
       .leftJoinAndSelect('quote.patient', 'patient')
       .leftJoinAndSelect('quote.surgeon', 'surgeon')
@@ -104,7 +107,8 @@ export class QuoteService {
   //Delete quote
   //@params - quote id
   async deleteQuote(data: { id: number }) {
-    await getRepository(QuoteEntity)
+    await this.dataSource
+      .getRepository(QuoteEntity)
       .createQueryBuilder()
       .delete()
       .where('id = :id')
@@ -123,13 +127,14 @@ export class QuoteService {
     this.logger.log(
       `Start getting details of Quotes for surgeon-${surgeon} and surgery-${surgery}`,
     );
-    const res = await getRepository(QuoteEntity)
-      .createQueryBuilder('tbl')
+    const res = await this.dataSource
+      .getRepository(QuoteEntity)
+      .createQueryBuilder('quote')
       .leftJoinAndSelect('quote.patient', 'patient')
       .leftJoinAndSelect('quote.surgeon', 'surgeon')
       .leftJoinAndSelect('quote.surgery', 'surgery')
-      .where('tbl.surgeon.id = :surgeon')
-      .andWhere('tbl.surgery.id = :surgery')
+      .where('quote.surgeon.id = :surgeon')
+      .andWhere('quote.surgery.id = :surgery')
       .setParameters({ surgeon: 'surgeon', surgery: 'surgery' })
       .getMany();
 

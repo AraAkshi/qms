@@ -11,8 +11,11 @@ import {
 } from '@mui/material';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import { AnyARecord } from 'dns';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { isTemplateExpression } from 'typescript';
 import { getQuotes } from '../../services/quote';
+import { getAllSurgeons } from '../../services/surgeon';
+import { getAllSurgerys } from '../../services/surgery';
 import Header from '../layout/Header';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -28,14 +31,25 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 function MarketingView() {
 	const [selectedSurgery, setSelectedSurgery] = useState();
 	const [selectedSurgeon, setSelectedSurgeon] = useState();
-	const [surgerys, setSurgerys] = useState([
-		'Surgery 1',
-		'Surgery 2',
-		'Surgery 3',
-	]);
-	const [surgeons, setSurgeons] = useState(['Dr.ABC', 'Dr.EFG', 'Dr.DBC']);
+	const [surgerys, setSurgerys] = useState<string[]>([]);
+	const [surgeons, setSurgeons] = useState<string[]>([]);
 	const [quoteTblVisible, setQuoteTblVisible] = useState(false);
 	const [quote, setQuote] = useState<any>();
+
+	useEffect(() => {
+		async function fetchData() {
+			const resSurgeons: { id: number; surgeonName: string }[] =
+				await getAllSurgeons();
+			const resSurgerys: { id: number; surgeryName: string }[] =
+				await getAllSurgerys();
+
+			if (resSurgeons !== undefined)
+				setSurgeons(resSurgeons.map((item) => item.surgeonName));
+			if (resSurgerys !== undefined)
+				setSurgerys(resSurgerys.map((item) => item.surgeryName));
+		}
+		fetchData();
+	}, [0]);
 
 	const handleSurgeryChange = (newValue: any) => {
 		setSelectedSurgery(newValue);
@@ -47,6 +61,7 @@ function MarketingView() {
 
 	const searchQuotes = async () => {
 		const quotes = await getQuotes(selectedSurgeon, selectedSurgery);
+		console.log(quotes);
 	};
 
 	const quotePackage = (quote: any) => {

@@ -13,6 +13,7 @@ import { PatientModule } from './patient/patient.module';
 import { QuoteModule } from './quote/quote.module';
 import { IncrementEntity } from './entities/increment.entity';
 import { IncrementModule } from './increment/increment.module';
+import { DataSource } from 'typeorm';
 
 @Module({
   imports: [

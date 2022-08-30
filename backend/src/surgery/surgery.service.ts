@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SurgeryEntity } from 'src/entities/sugery.entity';
-import { getRepository } from 'typeorm';
+import { DataSource, getRepository } from 'typeorm';
 import { Repository } from 'typeorm/repository/Repository';
 
 @Injectable()
@@ -10,12 +10,14 @@ export class SurgeryService {
   constructor(
     @InjectRepository(SurgeryEntity)
     private repo: Repository<SurgeryEntity>,
+    private dataSource: DataSource,
   ) {}
 
   //Get all surgerys
   async getAllSurgerys(): Promise<SurgeryEntity[]> {
     this.logger.log('Start getting details for all surgerys');
-    const surgerys = await getRepository(SurgeryEntity)
+    const surgerys = await this.dataSource
+      .getRepository(SurgeryEntity)
       .createQueryBuilder('surgery')
       .getMany();
 
@@ -27,7 +29,8 @@ export class SurgeryService {
   //@params - surgery Id
   async getOnesurgery(surgeryID: number): Promise<SurgeryEntity> {
     this.logger.log(`Start getting details for surgery with Id - ${surgeryID}`);
-    const surgery = await getRepository(SurgeryEntity)
+    const surgery = await this.dataSource
+      .getRepository(SurgeryEntity)
       .createQueryBuilder('surgery')
       .where('surgery.id = :id')
       .setParameter('id', surgeryID)
@@ -67,7 +70,8 @@ export class SurgeryService {
   //Delete surgery
   //@params - surgery id
   async deletesurgerys(data: { id: number }) {
-    await getRepository(SurgeryEntity)
+    await this.dataSource
+      .getRepository(SurgeryEntity)
       .createQueryBuilder()
       .delete()
       .where('id = :id')

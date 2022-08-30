@@ -26,10 +26,10 @@ export class QuoteEntity {
   @Column()
   package3: number;
 
-  @Column({ type: 'varchar' })
+  @Column({ type: 'varchar', nullable: true })
   selectedPackage: string;
 
-  @Column()
+  @Column({ nullable: true })
   actualPrice: number;
 
   @Column({ default: false })

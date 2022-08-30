@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IncrementEntity } from 'src/entities/increment.entity';
-import { getRepository } from 'typeorm';
+import { DataSource, getRepository } from 'typeorm';
 import { Repository } from 'typeorm/repository/Repository';
 
 @Injectable()
@@ -10,12 +10,14 @@ export class IncrementService {
   constructor(
     @InjectRepository(IncrementEntity)
     private repo: Repository<IncrementEntity>,
+    private dataSource: DataSource,
   ) {}
 
   //Get all Increments
   async getAllIncrements(): Promise<IncrementEntity[]> {
     this.logger.log('Start getting details for all Increments');
-    const increments = await getRepository(IncrementEntity)
+    const increments = await this.dataSource
+      .getRepository(IncrementEntity)
       .createQueryBuilder('increment')
       .getMany();
 
@@ -29,7 +31,8 @@ export class IncrementService {
     this.logger.log(
       `Start getting details for Increment with Id - ${IncrementID}`,
     );
-    const increment = await getRepository(IncrementEntity)
+    const increment = await this.dataSource
+      .getRepository(IncrementEntity)
       .createQueryBuilder('increment')
       .where('increment.id = :id')
       .setParameter('id', IncrementID)
@@ -78,7 +81,8 @@ export class IncrementService {
   //Delete Increment
   //@params - Increment id
   async deleteIncrement(data: { id: number }) {
-    await getRepository(IncrementEntity)
+    await this.dataSource
+      .getRepository(IncrementEntity)
       .createQueryBuilder()
       .delete()
       .where('id = :id')
