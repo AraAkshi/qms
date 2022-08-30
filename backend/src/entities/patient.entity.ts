@@ -12,7 +12,7 @@ export class PatientEntity {
   @Column()
   patientNo: number;
 
-  @Column({ type: 'varchar' })
+  @Column({ type: 'varchar', nullable: true })
   pid: string;
 
   @OneToMany(() => QuoteEntity, (quote) => quote.patient)

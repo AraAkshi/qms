@@ -57,6 +57,7 @@ export class QuoteService {
     package3: number;
     actualPrice: number;
     isAdmitted: boolean;
+    selectedPackage: string;
   }): Promise<QuoteEntity> {
     const quote = this.repo.create(data);
     await this.repo.save(quote);
@@ -76,6 +77,7 @@ export class QuoteService {
     package3?: number;
     actualPrice?: number;
     isAdmitted?: boolean;
+    selectedPackage?: string;
     id: number;
   }): Promise<QuoteEntity> {
     const quote = await this.repo.findOne({ where: { id: data.id } });
@@ -88,6 +90,7 @@ export class QuoteService {
       package3,
       actualPrice,
       isAdmitted,
+      selectedPackage,
     } = data;
 
     if (patient) quote.patient = patient;
@@ -98,10 +101,11 @@ export class QuoteService {
     if (package3) quote.package3 = package3;
     if (actualPrice) quote.actualPrice = actualPrice;
     if (isAdmitted) quote.isAdmitted = isAdmitted;
+    if (selectedPackage) quote.selectedPackage = selectedPackage;
 
     await this.repo.save(quote);
     this.logger.log(`Successfully Updated details of quote - ${quote.id}`);
-    return patient;
+    return quote;
   }
 
   //Delete quote
@@ -133,9 +137,10 @@ export class QuoteService {
       .leftJoinAndSelect('quote.patient', 'patient')
       .leftJoinAndSelect('quote.surgeon', 'surgeon')
       .leftJoinAndSelect('quote.surgery', 'surgery')
-      .where('quote.surgeon.id = :surgeon')
+      .where('quote.surgeon.id= :surgeon')
       .andWhere('quote.surgery.id = :surgery')
-      .setParameters({ surgeon: 'surgeon', surgery: 'surgery' })
+      .setParameters({ surgeon: surgeon, surgery: surgery })
+      .orderBy('quote.quotedDate')
       .getMany();
 
     this.logger.log(

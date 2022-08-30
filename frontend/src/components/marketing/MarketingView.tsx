@@ -10,10 +10,8 @@ import {
 	TextField,
 } from '@mui/material';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
-import { AnyARecord } from 'dns';
 import React, { useEffect, useState } from 'react';
-import { isTemplateExpression } from 'typescript';
-import { getQuotes } from '../../services/quote';
+import { getQuotes, updateQuotes } from '../../services/quote';
 import { getAllSurgeons } from '../../services/surgeon';
 import { getAllSurgerys } from '../../services/surgery';
 import Header from '../layout/Header';
@@ -33,6 +31,8 @@ function MarketingView() {
 	const [selectedSurgeon, setSelectedSurgeon] = useState();
 	const [surgerys, setSurgerys] = useState<string[]>([]);
 	const [surgeons, setSurgeons] = useState<string[]>([]);
+	const [surgeryObjs, setSurgeryObjs] = useState<any[]>([]);
+	const [surgeonObjs, setSurgeonObjs] = useState<any[]>([]);
 	const [quoteTblVisible, setQuoteTblVisible] = useState(false);
 	const [quote, setQuote] = useState<any>();
 
@@ -43,10 +43,14 @@ function MarketingView() {
 			const resSurgerys: { id: number; surgeryName: string }[] =
 				await getAllSurgerys();
 
-			if (resSurgeons !== undefined)
+			if (resSurgeons !== undefined) {
+				setSurgeonObjs(resSurgeons);
 				setSurgeons(resSurgeons.map((item) => item.surgeonName));
-			if (resSurgerys !== undefined)
+			}
+			if (resSurgerys !== undefined) {
+				setSurgeryObjs(resSurgerys);
 				setSurgerys(resSurgerys.map((item) => item.surgeryName));
+			}
 		}
 		fetchData();
 	}, [0]);
@@ -60,12 +64,28 @@ function MarketingView() {
 	};
 
 	const searchQuotes = async () => {
-		const quotes = await getQuotes(selectedSurgeon, selectedSurgery);
-		console.log(quotes);
+		const selectedSurgeonObj = surgeonObjs.find(
+			(item) => item.surgeonName === selectedSurgeon
+		);
+
+		const selectedSurgeryObj = surgeryObjs.find(
+			(item) => item.surgeryName === selectedSurgery
+		);
+		const quotes = await getQuotes(
+			selectedSurgeonObj.id,
+			selectedSurgeryObj.id
+		);
+		if (quotes !== undefined) setQuote(quotes[quotes.length - 1]);
+
+		setQuoteTblVisible(true);
 	};
 
-	const quotePackage = (quote: any) => {
-		console.log(quote);
+	const quotePackage = async (quote: any, selectedPackage: string) => {
+		const updatedQuote = await updateQuotes(quote.id, selectedPackage);
+		window.open(
+			window.location.origin + `/marketing/add-patient/${updatedQuote.id}`,
+			'_self'
+		);
 	};
 
 	return (
@@ -125,36 +145,70 @@ function MarketingView() {
 								</Grid>
 							</Grid>
 							<Grid item>
-								<TableContainer style={{ maxHeight: '60vh' }}>
-									<Table size='small' stickyHeader>
-										<TableHead>
-											<TableRow>
-												<StyledTableCell>Package</StyledTableCell>
-												<StyledTableCell>Price</StyledTableCell>
-											</TableRow>
-										</TableHead>
-										<TableBody>
-											{quote !== undefined && quote !== '' ? (
-												<TableRow hover={true}>
-													<StyledTableCell>Executive 1</StyledTableCell>
-													<StyledTableCell>{quote.package1}</StyledTableCell>
-													<StyledTableCell>
-														<button
-															className='search-btn'
-															onClick={() => quotePackage(quote.id)}
-														>
-															QUOTE
-														</button>
-													</StyledTableCell>
+								{quoteTblVisible ? (
+									<TableContainer
+										style={{
+											maxHeight: '60vh',
+											width: '40vw',
+											margin: 'auto',
+										}}
+									>
+										<Table size='small' stickyHeader>
+											<TableHead>
+												<TableRow>
+													<StyledTableCell>Package</StyledTableCell>
+													<StyledTableCell>Price</StyledTableCell>
+													<StyledTableCell></StyledTableCell>
 												</TableRow>
+											</TableHead>
+											{quote !== undefined && quote !== '' ? (
+												<TableBody>
+													<TableRow hover={true}>
+														<StyledTableCell>Executive 1</StyledTableCell>
+														<StyledTableCell>{quote.package1}</StyledTableCell>
+														<StyledTableCell>
+															<button
+																className='search-quote-btn'
+																onClick={() => quotePackage(quote, 'package1')}
+															>
+																QUOTE
+															</button>
+														</StyledTableCell>
+														,
+													</TableRow>
+													<TableRow hover={true}>
+														<StyledTableCell>Executive 2</StyledTableCell>
+														<StyledTableCell>{quote.package2}</StyledTableCell>
+														<StyledTableCell>
+															<button
+																className='search-quote-btn'
+																onClick={() => quotePackage(quote, 'package2')}
+															>
+																QUOTE
+															</button>
+														</StyledTableCell>
+													</TableRow>
+													<TableRow hover={true}>
+														<StyledTableCell>Executive 3</StyledTableCell>
+														<StyledTableCell>{quote.package3}</StyledTableCell>
+														<StyledTableCell>
+															<button
+																className='search-quote-btn'
+																onClick={() => quotePackage(quote, 'package3')}
+															>
+																QUOTE
+															</button>
+														</StyledTableCell>
+													</TableRow>
+												</TableBody>
 											) : (
 												<TableRow>
 													<TableCell>No details available</TableCell>
 												</TableRow>
 											)}
-										</TableBody>
-									</Table>
-								</TableContainer>
+										</Table>
+									</TableContainer>
+								) : null}
 							</Grid>
 						</Grid>
 					</div>

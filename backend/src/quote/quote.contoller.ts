@@ -42,12 +42,13 @@ export class QuoteController {
       package3: number;
       actualPrice: number;
       isAdmitted: boolean;
+      selectedPackage: string;
     },
   ): Promise<QuoteEntity> {
     return await this.service.addQuote(data);
   }
 
-  @Put('/edit')
+  @Post('/edit')
   // @UseGuards(JwtAuthGuard)
   async edit(
     @Body()
@@ -60,6 +61,7 @@ export class QuoteController {
       package3?: number;
       actualPrice?: number;
       isAdmitted?: boolean;
+      selectedPackage?: string;
       id: number;
     },
   ): Promise<QuoteEntity> {
