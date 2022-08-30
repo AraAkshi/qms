@@ -10,10 +10,6 @@ function App() {
 			<Routes>
 				<Route path='/' element={<MarketingView />} />
 				<Route path='/marketing' element={<MarketingView />} />
-				<Route
-					path='/marketing/add-patient/:id'
-					element={<AddPatientDetails />}
-				/>
 			</Routes>
 		</BrowserRouter>
 	);

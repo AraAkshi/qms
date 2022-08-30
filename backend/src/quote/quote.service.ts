@@ -52,12 +52,9 @@ export class QuoteService {
     patient: any;
     surgeon: any;
     surgery: any;
-    package1: number;
-    package2: number;
-    package3: number;
     actualPrice: number;
     isAdmitted: boolean;
-    selectedPackage: string;
+    selectedPackage: number;
   }): Promise<QuoteEntity> {
     const quote = this.repo.create(data);
     await this.repo.save(quote);
@@ -72,12 +69,9 @@ export class QuoteService {
     patient?: any;
     surgeon?: any;
     surgery?: any;
-    package1?: number;
-    package2?: number;
-    package3?: number;
     actualPrice?: number;
     isAdmitted?: boolean;
-    selectedPackage?: string;
+    selectedPackage?: number;
     id: number;
   }): Promise<QuoteEntity> {
     const quote = await this.repo.findOne({ where: { id: data.id } });
@@ -85,9 +79,6 @@ export class QuoteService {
       patient,
       surgeon,
       surgery,
-      package1,
-      package2,
-      package3,
       actualPrice,
       isAdmitted,
       selectedPackage,
@@ -96,9 +87,6 @@ export class QuoteService {
     if (patient) quote.patient = patient;
     if (surgeon) quote.surgeon = surgeon;
     if (surgery) quote.surgery = surgery;
-    if (package1) quote.package1 = package1;
-    if (package2) quote.package2 = package2;
-    if (package3) quote.package3 = package3;
     if (actualPrice) quote.actualPrice = actualPrice;
     if (isAdmitted) quote.isAdmitted = isAdmitted;
     if (selectedPackage) quote.selectedPackage = selectedPackage;

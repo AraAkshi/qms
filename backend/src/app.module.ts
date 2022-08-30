@@ -14,6 +14,8 @@ import { QuoteModule } from './quote/quote.module';
 import { IncrementEntity } from './entities/increment.entity';
 import { IncrementModule } from './increment/increment.module';
 import { DataSource } from 'typeorm';
+import { PackageModule } from './package/package.module';
+import { PackageEntity } from './entities/package.entity';
 
 @Module({
   imports: [
@@ -31,6 +33,7 @@ import { DataSource } from 'typeorm';
         QuoteEntity,
         UserEntity,
         IncrementEntity,
+        PackageEntity,
       ],
       synchronize: true,
     }),
@@ -39,6 +42,7 @@ import { DataSource } from 'typeorm';
     PatientModule,
     QuoteModule,
     IncrementModule,
+    PackageModule,
   ],
   controllers: [AppController],
   providers: [AppService],

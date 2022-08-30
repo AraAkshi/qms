@@ -3,13 +3,10 @@ import { PatientEntity } from './patient.entity';
 import { SurgeryEntity } from './sugery.entity';
 import { SurgeonEntity } from './surgeon.entity';
 
-@Entity('quote')
-export class QuoteEntity {
+@Entity('package')
+export class PackageEntity {
   @PrimaryGeneratedColumn()
   id: number;
-
-  @ManyToOne(() => PatientEntity, (patient) => patient.quote)
-  patient: PatientEntity;
 
   @ManyToOne(() => SurgeonEntity, (surgeon) => surgeon.quote)
   surgeon: SurgeonEntity;
@@ -17,15 +14,15 @@ export class QuoteEntity {
   @ManyToOne(() => SurgeryEntity, (surgery) => surgery.quote)
   surgery: SurgeryEntity;
 
-  @Column({ nullable: true })
-  selectedPackage: number;
+  @Column()
+  package1: number;
 
-  @Column({ nullable: true })
-  actualPrice: number;
+  @Column()
+  package2: number;
 
-  @Column({ default: false })
-  isAdmitted: boolean;
+  @Column()
+  package3: number;
 
   @Column({ default: new Date() })
-  quotedDate: Date;
+  createdDate: Date;
 }

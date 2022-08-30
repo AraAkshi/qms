@@ -11,10 +11,12 @@ import {
 } from '@mui/material';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import React, { useEffect, useState } from 'react';
-import { getQuotes, updateQuotes } from '../../services/quote';
+import { getQuotes } from '../../services/package';
+import { updateQuotes } from '../../services/quote';
 import { getAllSurgeons } from '../../services/surgeon';
 import { getAllSurgerys } from '../../services/surgery';
 import Header from '../layout/Header';
+import AddPatientDetails from './AddPatientDetails';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
 	[`&.${tableCellClasses.head}`]: {
@@ -33,8 +35,10 @@ function MarketingView() {
 	const [surgeons, setSurgeons] = useState<string[]>([]);
 	const [surgeryObjs, setSurgeryObjs] = useState<any[]>([]);
 	const [surgeonObjs, setSurgeonObjs] = useState<any[]>([]);
-	const [quoteTblVisible, setQuoteTblVisible] = useState(false);
+	const [quoteTblVisible, setQuoteTblVisible] = useState<boolean>(false);
+	const [selectedPackage, setSelectedPackage] = useState<number>(0);
 	const [quote, setQuote] = useState<any>();
+	const [open, setOpen] = useState<boolean>(false);
 
 	useEffect(() => {
 		async function fetchData() {
@@ -80,12 +84,9 @@ function MarketingView() {
 		setQuoteTblVisible(true);
 	};
 
-	const quotePackage = async (quote: any, selectedPackage: string) => {
-		const updatedQuote = await updateQuotes(quote.id, selectedPackage);
-		window.open(
-			window.location.origin + `/marketing/add-patient/${updatedQuote.id}`,
-			'_self'
-		);
+	const quotePackage = async (packageSelection: number) => {
+		setSelectedPackage(packageSelection);
+		setOpen(true);
 	};
 
 	return (
@@ -169,7 +170,7 @@ function MarketingView() {
 														<StyledTableCell>
 															<button
 																className='search-quote-btn'
-																onClick={() => quotePackage(quote, 'package1')}
+																onClick={() => quotePackage(quote.package1)}
 															>
 																QUOTE
 															</button>
@@ -182,7 +183,7 @@ function MarketingView() {
 														<StyledTableCell>
 															<button
 																className='search-quote-btn'
-																onClick={() => quotePackage(quote, 'package2')}
+																onClick={() => quotePackage(quote.package2)}
 															>
 																QUOTE
 															</button>
@@ -194,7 +195,7 @@ function MarketingView() {
 														<StyledTableCell>
 															<button
 																className='search-quote-btn'
-																onClick={() => quotePackage(quote, 'package3')}
+																onClick={() => quotePackage(quote.package3)}
 															>
 																QUOTE
 															</button>
@@ -214,6 +215,12 @@ function MarketingView() {
 					</div>
 				</div>
 			</div>
+			<AddPatientDetails
+				quote={quote}
+				selectedPackage={selectedPackage}
+				setOpen={setOpen}
+				open={open}
+			/>
 		</div>
 	);
 }

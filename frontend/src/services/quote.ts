@@ -1,25 +1,5 @@
 import { baseurl } from '../utils/baseUrl';
 
-//Get Quote for surgeon and surgery @params - surgeon , surgery
-export const getQuotes = async (surgeon: number, surgery: number) => {
-	const response = await fetch(baseurl + 'quote/getQuotesForSurgeonSurgery', {
-		method: 'POST',
-		headers: {
-			Accept: 'application/json',
-			'Content-Type': 'application/json',
-			// Authorization: token,
-		},
-		body: JSON.stringify({
-			surgeon,
-			surgery,
-		}),
-	});
-	if (response.status === 200 || response.status === 201) {
-		const data = await response.json();
-		return data;
-	}
-};
-
 //Update quote with quote details
 export const updateQuotes = async (id: number, selectedPackage: string) => {
 	const response = await fetch(baseurl + 'quote/edit', {
@@ -53,6 +33,37 @@ export const updateQuotesWithPatient = async (id: any, patient: any) => {
 		body: JSON.stringify({
 			id,
 			patient,
+		}),
+	});
+
+	if (response.status === 200 || response.status === 201) {
+		const data = await response.json();
+		return data;
+	}
+};
+
+export const addQuote = async (
+	patient: any,
+	surgeon: any,
+	surgery: any,
+	actualPrice: number,
+	isAdmitted: boolean,
+	selectedPackage: number
+) => {
+	const response = await fetch(baseurl + 'quote/add', {
+		method: 'POST',
+		headers: {
+			Accept: 'application/json',
+			'Content-Type': 'application/json',
+			// Authorization: token,
+		},
+		body: JSON.stringify({
+			patient,
+			surgeon,
+			surgery,
+			actualPrice,
+			isAdmitted,
+			selectedPackage,
 		}),
 	});
 

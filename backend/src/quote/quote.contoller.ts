@@ -37,12 +37,9 @@ export class QuoteController {
       patient: any;
       surgeon: any;
       surgery: any;
-      package1: number;
-      package2: number;
-      package3: number;
       actualPrice: number;
       isAdmitted: boolean;
-      selectedPackage: string;
+      selectedPackage: number;
     },
   ): Promise<QuoteEntity> {
     return await this.service.addQuote(data);
@@ -56,12 +53,9 @@ export class QuoteController {
       patient?: any;
       surgeon?: any;
       surgery?: any;
-      package1?: number;
-      package2?: number;
-      package3?: number;
       actualPrice?: number;
       isAdmitted?: boolean;
-      selectedPackage?: string;
+      selectedPackage?: number;
       id: number;
     },
   ): Promise<QuoteEntity> {
