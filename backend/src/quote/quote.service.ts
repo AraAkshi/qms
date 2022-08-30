@@ -113,4 +113,29 @@ export class QuoteService {
 
     this.logger.log(`Successfully deleted quote with Id - ${data.id}`);
   }
+
+  //Get Quote for surgeon and surgery
+  //@params - surgeon , surgery
+  async getQuoteForSurgeonSurgery(
+    surgeon: any,
+    surgery: any,
+  ): Promise<QuoteEntity[]> {
+    this.logger.log(
+      `Start getting details of Quotes for surgeon-${surgeon} and surgery-${surgery}`,
+    );
+    const res = await getRepository(QuoteEntity)
+      .createQueryBuilder('tbl')
+      .leftJoinAndSelect('quote.patient', 'patient')
+      .leftJoinAndSelect('quote.surgeon', 'surgeon')
+      .leftJoinAndSelect('quote.surgery', 'surgery')
+      .where('tbl.surgeon.id = :surgeon')
+      .andWhere('tbl.surgery.id = :surgery')
+      .setParameters({ surgeon: 'surgeon', surgery: 'surgery' })
+      .getMany();
+
+    this.logger.log(
+      `Successfully returned details of Quotes for surgeon-${surgeon} and surgery-${surgery}`,
+    );
+    return res;
+  }
 }

@@ -12,6 +12,17 @@ export class QuoteController {
     return await this.service.getAllQuotes();
   }
 
+  @Post('/getQuotesForSurgeonSurgery')
+  // @UseGuards(JwtAuthGuard)
+  async getQuotesForSurgeonSurgery(
+    @Body() data: { surgeon: any; surgery: any },
+  ): Promise<QuoteEntity[]> {
+    return await this.service.getQuoteForSurgeonSurgery(
+      data.surgeon,
+      data.surgery,
+    );
+  }
+
   @Post('/getOne')
   // @UseGuards(JwtAuthGuard)
   async getOne(@Body() data: { id: number }): Promise<QuoteEntity> {
