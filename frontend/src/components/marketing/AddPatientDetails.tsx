@@ -59,50 +59,55 @@ function AddPatientDetails() {
 				// BackdropComponent={Backdrop}
 			>
 				<div className='addModal'>
-					<form className='form' onSubmit={(e) => onSubmit(e)}>
-						<Grid
-							container
-							direction='column'
-							spacing={1}
-							style={{ padding: '1rem' }}
-						>
-							<TextField
-								name='patientName'
-								size='small'
-								label='Patient Name'
-								value={patientName.toUpperCase()}
-								onChange={(e) => onChange(e)}
-								style={{ marginTop: '0.5rem' }}
-								required
-							/>
-							<TextField
-								name='patientNo'
-								label='Patient Mobile No'
-								size='small'
-								value={patientNo}
-								onChange={(e) => onChange(e)}
-								style={{ marginTop: '0.5rem' }}
-							/>
-						</Grid>
-						<Grid
-							container
-							direction='row'
-							spacing={3}
-							justifyContent='center'
-							style={{ padding: '1rem' }}
-						>
-							<Grid item>
-								<button className='search-btn' onClick={resetForm}>
-									RESET
-								</button>
-							</Grid>
-							<Grid item>
-								<button className='search-btn' onClick={onSubmit}>
-									CONFIRM
-								</button>
-							</Grid>
-						</Grid>
-					</form>
+					<div className='card-container-outer'>
+						<div className='card-container-header'>SURGERY PACKAGES</div>
+						<div className='card-container-inner'>
+							<form className='form' onSubmit={(e) => onSubmit(e)}>
+								<Grid
+									container
+									direction='column'
+									spacing={1}
+									style={{ padding: '1rem' }}
+								>
+									<TextField
+										name='patientName'
+										size='small'
+										label='Patient Name'
+										value={patientName.toUpperCase()}
+										onChange={(e) => onChange(e)}
+										style={{ marginTop: '0.5rem' }}
+										required
+									/>
+									<TextField
+										name='patientNo'
+										label='Patient Mobile No'
+										size='small'
+										value={patientNo}
+										onChange={(e) => onChange(e)}
+										style={{ marginTop: '0.5rem' }}
+									/>
+								</Grid>
+								<Grid
+									container
+									direction='row'
+									spacing={3}
+									justifyContent='center'
+									style={{ padding: '1rem' }}
+								>
+									<Grid item>
+										<button className='search-btn' onClick={resetForm}>
+											RESET
+										</button>
+									</Grid>
+									<Grid item>
+										<button className='search-btn' onClick={onSubmit}>
+											CONFIRM
+										</button>
+									</Grid>
+								</Grid>
+							</form>
+						</div>
+					</div>
 				</div>
 			</Modal>
 		</div>
