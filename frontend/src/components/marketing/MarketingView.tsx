@@ -37,7 +37,7 @@ function MarketingView() {
 	const [surgeonObjs, setSurgeonObjs] = useState<any[]>([]);
 	const [quoteTblVisible, setQuoteTblVisible] = useState<boolean>(false);
 	const [selectedPackage, setSelectedPackage] = useState<number>(0);
-	const [quote, setQuote] = useState<any>();
+	const [quotes, setQuotes] = useState<any[]>([]);
 	const [open, setOpen] = useState<boolean>(false);
 
 	useEffect(() => {
@@ -79,11 +79,11 @@ function MarketingView() {
 			(item) => item.surgeryName === selectedSurgery
 		);
 
-		const quotes = await getQuotes(
+		const quotesRes = await getQuotes(
 			selectedSurgeonObj.id,
 			selectedSurgeryObj.id
 		);
-		if (quotes !== undefined) setQuote(quotes[quotes.length - 1]);
+		if (quotesRes !== undefined) setQuotes(quotesRes);
 
 		setQuoteTblVisible(true);
 	};
@@ -162,50 +162,34 @@ function MarketingView() {
 											<TableHead>
 												<TableRow>
 													<StyledTableCell>Package</StyledTableCell>
-													<StyledTableCell>Price</StyledTableCell>
-													<StyledTableCell></StyledTableCell>
+													<StyledTableCell>Bed Category</StyledTableCell>
+													<StyledTableCell>Hospital Fee</StyledTableCell>
 												</TableRow>
 											</TableHead>
-											{quote !== undefined && quote !== '' ? (
-												<TableBody>
-													<TableRow hover={true}>
-														<StyledTableCell>Executive 1</StyledTableCell>
-														<StyledTableCell>{quote.package1}</StyledTableCell>
-														<StyledTableCell>
-															<button
-																className='search-quote-btn'
-																onClick={() => quotePackage(quote.package1)}
-															>
-																QUOTE
-															</button>
-														</StyledTableCell>
-														,
-													</TableRow>
-													<TableRow hover={true}>
-														<StyledTableCell>Executive 2</StyledTableCell>
-														<StyledTableCell>{quote.package2}</StyledTableCell>
-														<StyledTableCell>
-															<button
-																className='search-quote-btn'
-																onClick={() => quotePackage(quote.package2)}
-															>
-																QUOTE
-															</button>
-														</StyledTableCell>
-													</TableRow>
-													<TableRow hover={true}>
-														<StyledTableCell>Executive 3</StyledTableCell>
-														<StyledTableCell>{quote.package3}</StyledTableCell>
-														<StyledTableCell>
-															<button
-																className='search-quote-btn'
-																onClick={() => quotePackage(quote.package3)}
-															>
-																QUOTE
-															</button>
-														</StyledTableCell>
-													</TableRow>
-												</TableBody>
+											{quotes !== undefined ? (
+												quotes.map(
+													(quote: {
+														packageName: string;
+														bedCategory: string;
+														hospitalFee: number;
+													}) => {
+														return (
+															<TableBody>
+																<TableRow>
+																	<StyledTableCell>
+																		{quote.packageName}
+																	</StyledTableCell>
+																	<StyledTableCell>
+																		{quote.bedCategory}
+																	</StyledTableCell>
+																	<StyledTableCell>
+																		{quote.hospitalFee}
+																	</StyledTableCell>
+																</TableRow>
+															</TableBody>
+														);
+													}
+												)
 											) : (
 												<TableRow>
 													<TableCell>No details available</TableCell>
@@ -215,12 +199,13 @@ function MarketingView() {
 									</TableContainer>
 								) : null}
 							</Grid>
+							{quoteTblVisible ? <Grid item></Grid> : null}
 						</Grid>
 					</div>
 				</div>
 			</div>
 			<AddPatientDetails
-				quote={quote}
+				quote={quotes}
 				selectedPackage={selectedPackage}
 				setOpen={setOpen}
 				open={open}
