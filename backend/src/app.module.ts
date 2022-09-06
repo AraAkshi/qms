@@ -16,6 +16,8 @@ import { IncrementModule } from './increment/increment.module';
 import { DataSource } from 'typeorm';
 import { PackageModule } from './package/package.module';
 import { PackageEntity } from './entities/package.entity';
+import { PastRecordsEntity } from './entities/pastRecords.entity';
+import { PastRecordsModule } from './past-records/past-records.module';
 
 @Module({
   imports: [
@@ -34,6 +36,7 @@ import { PackageEntity } from './entities/package.entity';
         UserEntity,
         IncrementEntity,
         PackageEntity,
+        PastRecordsEntity,
       ],
       synchronize: true,
     }),
@@ -43,6 +46,7 @@ import { PackageEntity } from './entities/package.entity';
     QuoteModule,
     IncrementModule,
     PackageModule,
+    PastRecordsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

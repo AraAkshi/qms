@@ -12,6 +12,7 @@ import {
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import React, { useEffect, useState } from 'react';
 import { getQuotes, getSurgeonsForSurgery } from '../../services/package';
+import { getPastRecords } from '../../services/past-records';
 import { updateQuotes } from '../../services/quote';
 import { getAllSurgeons } from '../../services/surgeon';
 import { getAllSurgerys } from '../../services/surgery';
@@ -22,9 +23,10 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 	[`&.${tableCellClasses.head}`]: {
 		backgroundColor: theme.palette.common.black,
 		color: theme.palette.common.white,
+		fontSize: 11,
 	},
 	[`&.${tableCellClasses.body}`]: {
-		fontSize: 12,
+		fontSize: 11,
 	},
 }));
 
@@ -38,6 +40,7 @@ function MarketingView() {
 	const [quoteTblVisible, setQuoteTblVisible] = useState<boolean>(false);
 	const [selectedPackage, setSelectedPackage] = useState<number>(0);
 	const [quotes, setQuotes] = useState<any[]>([]);
+	const [pastRecords, setPastRecords] = useState<any[]>([]);
 	const [open, setOpen] = useState<boolean>(false);
 
 	useEffect(() => {
@@ -84,6 +87,19 @@ function MarketingView() {
 			selectedSurgeryObj.id
 		);
 		if (quotesRes !== undefined) setQuotes(quotesRes);
+
+		const recordRes = await getPastRecords(
+			selectedSurgeonObj.id,
+			selectedSurgeryObj.id
+		);
+		if (recordRes !== undefined) {
+			const latestThreeRecords = [];
+			for (let index = 0; index < recordRes.length && index <= 3; index++) {
+				latestThreeRecords.push(recordRes[index]);
+			}
+
+			setPastRecords(latestThreeRecords);
+		}
 
 		setQuoteTblVisible(true);
 	};
@@ -154,7 +170,7 @@ function MarketingView() {
 									<TableContainer
 										style={{
 											maxHeight: '60vh',
-											width: '40vw',
+											width: '25vw',
 											margin: 'auto',
 										}}
 									>
@@ -199,7 +215,64 @@ function MarketingView() {
 									</TableContainer>
 								) : null}
 							</Grid>
-							{quoteTblVisible ? <Grid item></Grid> : null}
+							{quoteTblVisible && pastRecords !== undefined ? (
+								<Grid item>
+									<TableContainer
+										style={{
+											maxHeight: '60vh',
+											width: '60vw',
+											margin: 'auto',
+										}}
+									>
+										<Table size='small' stickyHeader>
+											<TableHead>
+												<TableRow>
+													<StyledTableCell>Surgeon</StyledTableCell>
+													<StyledTableCell>Surgery</StyledTableCell>
+													<StyledTableCell>Bed Capacity</StyledTableCell>
+													<StyledTableCell>Length Of Stay</StyledTableCell>
+													<StyledTableCell>Discharged Date</StyledTableCell>
+													<StyledTableCell>Consultation Fee</StyledTableCell>
+													<StyledTableCell>Hospital Fee</StyledTableCell>
+													<StyledTableCell>Total Fee</StyledTableCell>
+												</TableRow>
+											</TableHead>
+											{pastRecords.map((record: any) => {
+												return (
+													<TableBody>
+														<TableRow>
+															<StyledTableCell>
+																{record.surgeon.surgeonName}
+															</StyledTableCell>
+															<StyledTableCell>
+																{record.surgery.surgeryName}
+															</StyledTableCell>
+															<StyledTableCell>
+																{record.bedCategory}
+															</StyledTableCell>
+															<StyledTableCell>{record.LOS}</StyledTableCell>
+															<StyledTableCell>
+																{new Date(
+																	record.dischargeDate
+																).toLocaleDateString()}
+															</StyledTableCell>
+															<StyledTableCell>
+																{record.consultationFee}
+															</StyledTableCell>
+															<StyledTableCell>
+																{record.hospitalFee}
+															</StyledTableCell>
+															<StyledTableCell>
+																{record.consultationFee + record.hospitalFee}
+															</StyledTableCell>
+														</TableRow>
+													</TableBody>
+												);
+											})}
+										</Table>
+									</TableContainer>
+								</Grid>
+							) : null}
 						</Grid>
 					</div>
 				</div>
