@@ -1,7 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PackageEntity } from 'src/entities/package.entity';
-import { DataSource, getRepository } from 'typeorm';
+import { SurgeonEntity } from 'src/entities/surgeon.entity';
+import { DataSource } from 'typeorm';
 import { Repository } from 'typeorm/repository/Repository';
 
 @Injectable()
@@ -49,9 +50,9 @@ export class PackageService {
   async addpackage(data: {
     surgeon: any;
     surgery: any;
-    package1: number;
-    package2: number;
-    package3: number;
+    packageName: string;
+    hospitalFee: number;
+    bedCategory: string;
   }): Promise<PackageEntity> {
     const res = this.repo.create(data);
     await this.repo.save(res);
@@ -65,19 +66,19 @@ export class PackageService {
   async editpackage(data: {
     surgeon?: any;
     surgery?: any;
-    package1?: number;
-    package2?: number;
-    package3?: number;
+    packageName?: string;
+    hospitalFee?: number;
+    bedCategory?: string;
     id: number;
   }): Promise<PackageEntity> {
     const res = await this.repo.findOne({ where: { id: data.id } });
-    const { surgeon, surgery, package1, package2, package3 } = data;
+    const { surgeon, surgery, packageName, hospitalFee, bedCategory } = data;
 
     if (surgeon) res.surgeon = surgeon;
     if (surgery) res.surgery = surgery;
-    if (package1) res.package1 = package1;
-    if (package2) res.package2 = package2;
-    if (package3) res.package3 = package3;
+    if (packageName) res.packageName = packageName;
+    if (hospitalFee) res.hospitalFee = hospitalFee;
+    if (bedCategory) res.bedCategory = bedCategory;
 
     await this.repo.save(res);
     this.logger.log(`Successfully Updated details of package - ${res.id}`);
@@ -122,5 +123,27 @@ export class PackageService {
       `Successfully returned details of packages for surgeon-${surgeon} and surgery-${surgery}`,
     );
     return res;
+  }
+
+  //Get surgeons for surgery
+  //@params - surgery
+  async getSurgeonsForSurgery(surgery: any): Promise<SurgeonEntity[]> {
+    this.logger.log(`Start getting details of packages for surgery-${surgery}`);
+
+    const res = await this.dataSource
+      .getRepository(PackageEntity)
+      .createQueryBuilder('package')
+      .leftJoinAndSelect('package.surgeon', 'surgeon')
+      .leftJoinAndSelect('package.surgery', 'surgery')
+      .where('package.surgery.id = :surgery')
+      .setParameters({ surgery: surgery })
+      .orderBy('package.createdDate')
+      .getMany();
+
+    this.logger.log(
+      `Successfully returned details of packages for surgery-${surgery}`,
+    );
+
+    return res.map((item) => item.surgeon);
   }
 }

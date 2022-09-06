@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import React, { useEffect, useState } from 'react';
-import { getQuotes } from '../../services/package';
+import { getQuotes, getSurgeonsForSurgery } from '../../services/package';
 import { updateQuotes } from '../../services/quote';
 import { getAllSurgeons } from '../../services/surgeon';
 import { getAllSurgerys } from '../../services/surgery';
@@ -42,15 +42,9 @@ function MarketingView() {
 
 	useEffect(() => {
 		async function fetchData() {
-			const resSurgeons: { id: number; surgeonName: string }[] =
-				await getAllSurgeons();
 			const resSurgerys: { id: number; surgeryName: string }[] =
 				await getAllSurgerys();
 
-			if (resSurgeons !== undefined) {
-				setSurgeonObjs(resSurgeons);
-				setSurgeons(resSurgeons.map((item) => item.surgeonName));
-			}
 			if (resSurgerys !== undefined) {
 				setSurgeryObjs(resSurgerys);
 				setSurgerys(resSurgerys.map((item) => item.surgeryName));
@@ -59,8 +53,17 @@ function MarketingView() {
 		fetchData();
 	}, [0]);
 
-	const handleSurgeryChange = (newValue: any) => {
+	const handleSurgeryChange = async (newValue: any) => {
 		setSelectedSurgery(newValue);
+		const selectedSurgeryObj = surgeryObjs.find(
+			(item) => item.surgeryName === newValue
+		);
+		const surgeonRes = await getSurgeonsForSurgery(selectedSurgeryObj.id);
+
+		if (surgeonRes !== undefined) {
+			setSurgeonObjs(surgeonRes);
+			setSurgeons(surgeonRes.map((item: any) => item.surgeonName));
+		}
 	};
 
 	const handleSurgeonChange = (newValue: any) => {
@@ -75,6 +78,7 @@ function MarketingView() {
 		const selectedSurgeryObj = surgeryObjs.find(
 			(item) => item.surgeryName === selectedSurgery
 		);
+
 		const quotes = await getQuotes(
 			selectedSurgeonObj.id,
 			selectedSurgeryObj.id
@@ -106,23 +110,6 @@ function MarketingView() {
 								>
 									<Grid item xs={4}>
 										<Autocomplete
-											id='surgeonId'
-											options={surgeons.map((surgeon) => surgeon)}
-											onChange={(e, newValue) => {
-												handleSurgeonChange(newValue);
-											}}
-											renderInput={(params) => (
-												<TextField
-													{...params}
-													label='Surgeon'
-													className='select-component'
-													variant='standard'
-												/>
-											)}
-										/>
-									</Grid>
-									<Grid item xs={4}>
-										<Autocomplete
 											id='surgeryId'
 											options={surgerys.map((surgery) => surgery)}
 											onChange={(e, newValue) => {
@@ -134,6 +121,23 @@ function MarketingView() {
 													label='Surgery'
 													variant='standard'
 													className='select-component'
+												/>
+											)}
+										/>
+									</Grid>
+									<Grid item xs={4}>
+										<Autocomplete
+											id='surgeonId'
+											options={surgeons.map((surgeon) => surgeon)}
+											onChange={(e, newValue) => {
+												handleSurgeonChange(newValue);
+											}}
+											renderInput={(params) => (
+												<TextField
+													{...params}
+													label='Surgeon'
+													className='select-component'
+													variant='standard'
 												/>
 											)}
 										/>

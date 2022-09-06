@@ -14,14 +14,14 @@ export class PackageEntity {
   @ManyToOne(() => SurgeryEntity, (surgery) => surgery.quote)
   surgery: SurgeryEntity;
 
-  @Column()
-  package1: number;
+  @Column({ type: 'varchar', nullable: true })
+  packageName: string;
 
-  @Column()
-  package2: number;
+  @Column({ type: 'float' })
+  hospitalFee: number;
 
-  @Column()
-  package3: number;
+  @Column({ type: 'varchar', nullable: true })
+  bedCategory: string;
 
   @Column({ default: new Date() })
   createdDate: Date;

@@ -1,5 +1,6 @@
 import { Body, Controller, Delete, Get, Post, Put } from '@nestjs/common';
 import { PackageEntity } from 'src/entities/package.entity';
+import { SurgeonEntity } from 'src/entities/surgeon.entity';
 import { PackageService } from './package.service';
 
 @Controller('package')
@@ -10,6 +11,14 @@ export class PackageController {
   // @UseGuards(JwtAuthGuard)
   async getAll(): Promise<PackageEntity[]> {
     return await this.service.getAllPackages();
+  }
+
+  @Post('/getSurgeonsForSurgery')
+  // @UseGuards(JwtAuthGuard)
+  async getSurgeonsForSurgery(
+    @Body() data: { surgery: any },
+  ): Promise<SurgeonEntity[]> {
+    return await this.service.getSurgeonsForSurgery(data.surgery);
   }
 
   @Post('/getPackagesForSurgeonSurgery')
@@ -36,9 +45,9 @@ export class PackageController {
     data: {
       surgeon: any;
       surgery: any;
-      package1: number;
-      package2: number;
-      package3: number;
+      packageName: string;
+      hospitalFee: number;
+      bedCategory: string;
     },
   ): Promise<PackageEntity> {
     return await this.service.addpackage(data);
@@ -51,9 +60,9 @@ export class PackageController {
     data: {
       surgeon?: any;
       surgery?: any;
-      package1?: number;
-      package2?: number;
-      package3?: number;
+      packageName?: string;
+      hospitalFee?: number;
+      bedCategory?: string;
       id: number;
     },
   ): Promise<PackageEntity> {
