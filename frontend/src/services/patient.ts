@@ -18,3 +18,21 @@ export const addPatient = async (patientName: string, patientNo: any) => {
 		}
 	}
 };
+
+//Get all patients
+export const getAllPatients = async () => {
+	{
+		const response = await fetch(baseurl + 'patient/getAll', {
+			method: 'GET',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json',
+				// Authorization: token,
+			},
+		});
+		if (response.status === 200 || response.status === 201) {
+			const data = await response.json();
+			return data;
+		}
+	}
+};

@@ -9,7 +9,7 @@ export class PatientEntity {
   @Column({ type: 'varchar' })
   patientName: string;
 
-  @Column()
+  @Column({ unique: true })
   patientNo: number;
 
   @Column({ type: 'varchar', nullable: true })

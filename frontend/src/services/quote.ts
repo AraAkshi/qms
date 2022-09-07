@@ -42,6 +42,7 @@ export const updateQuotesWithPatient = async (id: any, patient: any) => {
 	}
 };
 
+//Add new quote
 export const addQuote = async (
 	patient: any,
 	surgeon: any,
@@ -68,6 +69,26 @@ export const addQuote = async (
 			hospitalFee,
 			consultationFee,
 			remark,
+		}),
+	});
+
+	if (response.status === 200 || response.status === 201) {
+		const data = await response.json();
+		return data;
+	}
+};
+
+//Get Quote details for patient @params -> patientId
+export const getQuotesForPatient = async (patient: any) => {
+	const response = await fetch(baseurl + 'quote/getQuoteForPatient', {
+		method: 'POST',
+		headers: {
+			Accept: 'application/json',
+			'Content-Type': 'application/json',
+			// Authorization: token,
+		},
+		body: JSON.stringify({
+			patient,
 		}),
 	});
 

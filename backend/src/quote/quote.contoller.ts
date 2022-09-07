@@ -23,6 +23,14 @@ export class QuoteController {
     );
   }
 
+  @Post('/getQuoteForPatient')
+  // @UseGuards(JwtAuthGuard)
+  async getQuotesForPatient(
+    @Body() data: { patient: any },
+  ): Promise<QuoteEntity[]> {
+    return await this.service.getQuoteForPatient(data.patient);
+  }
+
   @Post('/getOne')
   // @UseGuards(JwtAuthGuard)
   async getOne(@Body() data: { id: number }): Promise<QuoteEntity> {
@@ -42,6 +50,7 @@ export class QuoteController {
       consultationFee: number;
       actualPrice: number;
       remark: string;
+      isAdmitted: boolean;
     },
   ): Promise<QuoteEntity> {
     return await this.service.addQuote(data);
@@ -60,6 +69,7 @@ export class QuoteController {
       consultationFee?: number;
       actualPrice?: number;
       remark?: string;
+      isAdmitted?: boolean;
       id: number;
     },
   ): Promise<QuoteEntity> {

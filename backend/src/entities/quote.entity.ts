@@ -32,6 +32,9 @@ export class QuoteEntity {
   @Column({ nullable: true })
   remark: string;
 
+  @Column({ default: false })
+  isAdmitted: boolean;
+
   @Column({ default: new Date() })
   quotedDate: Date;
 }

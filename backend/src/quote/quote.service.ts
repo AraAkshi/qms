@@ -57,6 +57,7 @@ export class QuoteService {
     consultationFee: number;
     actualPrice: number;
     remark: string;
+    isAdmitted: boolean;
   }): Promise<QuoteEntity> {
     const quote = this.repo.create(data);
     await this.repo.save(quote);
@@ -76,6 +77,7 @@ export class QuoteService {
     consultationFee?: number;
     actualPrice?: number;
     remark?: string;
+    isAdmitted?: boolean;
     id: number;
   }): Promise<QuoteEntity> {
     const quote = await this.repo.findOne({ where: { id: data.id } });
@@ -88,6 +90,7 @@ export class QuoteService {
       hospitalFee,
       consultationFee,
       remark,
+      isAdmitted,
     } = data;
 
     if (patient) quote.patient = patient;
@@ -98,6 +101,7 @@ export class QuoteService {
     if (hospitalFee) quote.hospitalFee = hospitalFee;
     if (consultationFee) quote.consultationFee = consultationFee;
     if (remark) quote.remark = remark;
+    if (isAdmitted) quote.isAdmitted = isAdmitted;
 
     await this.repo.save(quote);
     this.logger.log(`Successfully Updated details of quote - ${quote.id}`);
@@ -141,6 +145,27 @@ export class QuoteService {
 
     this.logger.log(
       `Successfully returned details of Quotes for surgeon-${surgeon} and surgery-${surgery}`,
+    );
+    return res;
+  }
+
+  //Get Quote for Patient
+  //@params - patient
+  async getQuoteForPatient(patient: any): Promise<QuoteEntity[]> {
+    this.logger.log(`Start getting details of Quotes for patient-${patient}`);
+    const res = await this.dataSource
+      .getRepository(QuoteEntity)
+      .createQueryBuilder('quote')
+      .leftJoinAndSelect('quote.patient', 'patient')
+      .leftJoinAndSelect('quote.surgeon', 'surgeon')
+      .leftJoinAndSelect('quote.surgery', 'surgery')
+      .where('quote.patient.id= :patient')
+      .setParameters({ patient: patient })
+      .orderBy('quote.quotedDate')
+      .getMany();
+
+    this.logger.log(
+      `Successfully returned details of Quotes for patient-${patient}`,
     );
     return res;
   }

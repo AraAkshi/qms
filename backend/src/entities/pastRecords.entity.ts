@@ -13,7 +13,7 @@ export class PastRecordsEntity {
   @ManyToOne(() => SurgeryEntity, (surgery) => surgery.quote)
   surgery: SurgeryEntity;
 
-  @Column({ type: 'varchar' })
+  @Column({ type: 'varchar', nullable: true })
   bedCategory: string;
 
   @Column({ type: 'varchar' })
