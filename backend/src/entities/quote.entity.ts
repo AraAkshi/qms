@@ -17,14 +17,20 @@ export class QuoteEntity {
   @ManyToOne(() => SurgeryEntity, (surgery) => surgery.quote)
   surgery: SurgeryEntity;
 
-  @Column({ nullable: true })
-  selectedPackage: number;
+  @Column({ type: 'varchar', nullable: true })
+  bedCategory: string;
 
-  @Column({ nullable: true })
+  @Column({ type: 'float', nullable: true })
+  hospitalFee: number;
+
+  @Column({ type: 'float', nullable: true })
+  consultationFee: number;
+
+  @Column({ type: 'float', nullable: true })
   actualPrice: number;
 
-  @Column({ default: false })
-  isAdmitted: boolean;
+  @Column({ nullable: true })
+  remark: string;
 
   @Column({ default: new Date() })
   quotedDate: Date;

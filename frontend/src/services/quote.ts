@@ -46,9 +46,11 @@ export const addQuote = async (
 	patient: any,
 	surgeon: any,
 	surgery: any,
+	bedCategory: string,
+	hospitalFee: number,
+	consultationFee: number,
 	actualPrice: number,
-	isAdmitted: boolean,
-	selectedPackage: number
+	remark: string
 ) => {
 	const response = await fetch(baseurl + 'quote/add', {
 		method: 'POST',
@@ -62,8 +64,10 @@ export const addQuote = async (
 			surgeon,
 			surgery,
 			actualPrice,
-			isAdmitted,
-			selectedPackage,
+			bedCategory,
+			hospitalFee,
+			consultationFee,
+			remark,
 		}),
 	});
 
