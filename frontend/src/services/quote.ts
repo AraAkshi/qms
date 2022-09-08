@@ -1,7 +1,7 @@
 import { baseurl } from '../utils/baseUrl';
 
 //Update quote with quote details
-export const updateQuotes = async (id: number, selectedPackage: string) => {
+export const updateQuotes = async (id: number, isAdmitted: boolean) => {
 	const response = await fetch(baseurl + 'quote/edit', {
 		method: 'POST',
 		headers: {
@@ -11,7 +11,7 @@ export const updateQuotes = async (id: number, selectedPackage: string) => {
 		},
 		body: JSON.stringify({
 			id,
-			selectedPackage,
+			isAdmitted,
 		}),
 	});
 

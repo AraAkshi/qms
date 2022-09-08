@@ -13,25 +13,12 @@ import React, { useEffect, useState } from 'react';
 import { getAllPatients } from '../../services/patient';
 import Header from '../layout/Header';
 import _ from 'lodash';
-import { getQuotesForPatient } from '../../services/quote';
-
-const StyledTableHeaderCell = styled(TableCell)(({ theme }) => ({
-	[`&.${tableCellClasses.body}`]: {
-		fontSize: 11,
-		fontWeight: 'bold',
-	},
-}));
-
-const StyledTableValueCell = styled(TableCell)(({ theme }) => ({
-	[`&.${tableCellClasses.body}`]: {
-		fontSize: 11,
-	},
-}));
+import { getQuotesForPatient, updateQuotes } from '../../services/quote';
 
 function AdmissionView() {
 	const [patients, setPatients] = useState<any[]>([]);
 	const [patientObjs, setPatientObjs] = useState<any[]>([]);
-	const [quotes, setQuotes] = useState<any[]>([]);
+	// const [quotes, setQuotes] = useState<any[]>([]);
 	const [searchValue, setSearchValue] = useState();
 	const [selectedQuote, setSelectedQuote] = useState<any>();
 	const [open, setOpen] = useState<boolean>(false);
@@ -58,9 +45,16 @@ function AdmissionView() {
 
 		if (selectedPatient !== undefined) {
 			const patientQuotes = await getQuotesForPatient(selectedPatient.id);
-			if (patientQuotes !== undefined) setSelectedQuote(patientQuotes[0]);
+			if (patientQuotes !== undefined)
+				setSelectedQuote(patientQuotes[patientQuotes.length - 1]);
 			setOpen(true);
 		} else alert('Search record details unavailable1');
+	};
+
+	const onAdmitBtnClick = async () => {
+		const updateQuote = await updateQuotes(selectedQuote.id, true);
+		if (updateQuote !== undefined) alert('Details Updated Successfully!');
+		window.open(window.location.origin + `/admission-counter`, '_self');
 	};
 
 	return (
@@ -70,7 +64,7 @@ function AdmissionView() {
 				<div className='card-container-outer'>
 					<div className='card-container-header'>PATIENT ADMISSION</div>
 					<div className='card-container-inner'>
-						<Grid container direction='column'>
+						<Grid container direction='column' spacing={5}>
 							<Grid item>
 								<Grid
 									container
@@ -106,21 +100,131 @@ function AdmissionView() {
 									<TableContainer
 										style={{
 											maxHeight: '60vh',
-											width: '55vw',
+											width: '50vw',
 											margin: 'auto',
+											overflowY: 'auto',
 										}}
 									>
+										<div className='card-container-sub-header'>
+											PATIENT DETAILS
+										</div>
 										<Table size='small' stickyHeader>
 											<TableRow>
-												<StyledTableHeaderCell>
-													Patient Name
-												</StyledTableHeaderCell>
-												<StyledTableValueCell>
-													{selectedQuote.patient.patientName}
-												</StyledTableValueCell>
+												<TableCell>
+													<div className='tbl-header'>Patient Name</div>
+												</TableCell>
+												<TableCell>
+													<div className='tbl-body'>
+														{selectedQuote.patient.patientName}
+													</div>
+												</TableCell>
+											</TableRow>
+											<TableRow>
+												<TableCell>
+													<div className='tbl-header'>Patient No</div>
+												</TableCell>
+												<TableCell>
+													<div className='tbl-body'>
+														{selectedQuote.patient.patientNo}
+													</div>
+												</TableCell>
+											</TableRow>
+											<TableRow>
+												<TableCell>
+													<div className='tbl-header'>Surgery</div>
+												</TableCell>
+												<TableCell>
+													<div className='tbl-body'>
+														{selectedQuote.surgery.surgeryName}
+													</div>
+												</TableCell>
+											</TableRow>
+											<TableRow>
+												<TableCell>
+													<div className='tbl-header'>Surgeon</div>
+												</TableCell>
+												<TableCell>
+													<div className='tbl-body'>
+														{selectedQuote.surgeon.surgeonName}
+													</div>
+												</TableCell>
+											</TableRow>
+											<TableRow>
+												<TableCell>
+													<div className='tbl-header'>Bed Category</div>
+												</TableCell>
+												<TableCell>
+													<div className='tbl-body'>
+														{selectedQuote.bedCategory
+															? selectedQuote.bedCategory
+															: ''}
+													</div>
+												</TableCell>
+											</TableRow>
+											<TableRow>
+												<TableCell>
+													<div className='tbl-header'>Quoted Date</div>
+												</TableCell>
+												<TableCell>
+													<div className='tbl-body'>
+														{new Date(
+															selectedQuote.quotedDate
+														).toLocaleDateString()}
+													</div>
+												</TableCell>
+											</TableRow>
+											<TableRow>
+												<TableCell>
+													<div className='tbl-header'>Hospital Fee</div>
+												</TableCell>
+												<TableCell>
+													<div className='tbl-body'>
+														{selectedQuote.hospitalFee}
+													</div>
+												</TableCell>
+											</TableRow>
+											<TableRow>
+												<TableCell>
+													<div className='tbl-header'>Consultation Fee</div>
+												</TableCell>
+												<TableCell>
+													<div className='tbl-body'>
+														{selectedQuote.consultationFee}
+													</div>
+												</TableCell>
+											</TableRow>
+											<TableRow>
+												<TableCell>
+													<div className='tbl-header'>Total Fee</div>
+												</TableCell>
+												<TableCell>
+													<div className='tbl-body'>
+														{selectedQuote.hospitalFee +
+															selectedQuote.consultationFee}
+													</div>
+												</TableCell>
+											</TableRow>
+											<TableRow>
+												<TableCell>
+													<div className='tbl-header'>Remarks</div>
+												</TableCell>
+												<TableCell>
+													<div className='tbl-body'>
+														{selectedQuote.remarks ? selectedQuote.remarks : ''}
+													</div>
+												</TableCell>
 											</TableRow>
 										</Table>
 									</TableContainer>
+									<Grid
+										container
+										justifyContent='center'
+										style={{ marginBottom: '2rem', marginTop: '1.3rem' }}
+									>
+										<button className='search-btn' onClick={onAdmitBtnClick}>
+											ADMIT
+										</button>
+									</Grid>
 								</Grid>
 							) : null}
 						</Grid>
