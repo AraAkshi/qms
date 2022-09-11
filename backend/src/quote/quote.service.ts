@@ -55,7 +55,9 @@ export class QuoteService {
     bedCategory: string;
     hospitalFee: number;
     consultationFee: number;
-    actualPrice: number;
+    actualHospitalFee: number;
+    actualConsultationFee: number;
+    discount: number;
     remark: string;
     isAdmitted: boolean;
   }): Promise<QuoteEntity> {
@@ -75,7 +77,9 @@ export class QuoteService {
     bedCategory?: string;
     hospitalFee?: number;
     consultationFee?: number;
-    actualPrice?: number;
+    actualHospitalFee?: number;
+    actualConsultationFee?: number;
+    discount?: number;
     remark?: string;
     isAdmitted?: boolean;
     id: number;
@@ -85,7 +89,9 @@ export class QuoteService {
       patient,
       surgeon,
       surgery,
-      actualPrice,
+      actualHospitalFee,
+      actualConsultationFee,
+      discount,
       bedCategory,
       hospitalFee,
       consultationFee,
@@ -96,7 +102,10 @@ export class QuoteService {
     if (patient) quote.patient = patient;
     if (surgeon) quote.surgeon = surgeon;
     if (surgery) quote.surgery = surgery;
-    if (actualPrice) quote.actualPrice = actualPrice;
+    if (actualHospitalFee) quote.actualHospitalFee = actualHospitalFee;
+    if (actualConsultationFee)
+      quote.actualConsultationFee = actualConsultationFee;
+    if (discount) quote.discount = discount;
     if (bedCategory) quote.bedCategory = bedCategory;
     if (hospitalFee) quote.hospitalFee = hospitalFee;
     if (consultationFee) quote.consultationFee = consultationFee;

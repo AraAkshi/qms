@@ -48,7 +48,9 @@ export class QuoteController {
       bedCategory: string;
       hospitalFee: number;
       consultationFee: number;
-      actualPrice: number;
+      actualHospitalFee: number;
+      actualConsultationFee: number;
+      discount: number;
       remark: string;
       isAdmitted: boolean;
     },
@@ -67,7 +69,9 @@ export class QuoteController {
       bedCategory?: string;
       hospitalFee?: number;
       consultationFee?: number;
-      actualPrice?: number;
+      actualHospitalFee?: number;
+      actualConsultationFee?: number;
+      discount?: number;
       remark?: string;
       isAdmitted?: boolean;
       id: number;

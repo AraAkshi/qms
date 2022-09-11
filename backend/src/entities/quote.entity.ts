@@ -27,7 +27,13 @@ export class QuoteEntity {
   consultationFee: number;
 
   @Column({ type: 'float', nullable: true })
-  actualPrice: number;
+  actualHospitalFee: number;
+
+  @Column({ type: 'float', nullable: true })
+  actualConsultationFee: number;
+
+  @Column({ type: 'float', nullable: true })
+  discount: number;
 
   @Column({ nullable: true })
   remark: string;

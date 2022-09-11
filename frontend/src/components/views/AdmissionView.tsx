@@ -18,7 +18,6 @@ import { getQuotesForPatient, updateQuotes } from '../../services/quote';
 function AdmissionView() {
 	const [patients, setPatients] = useState<any[]>([]);
 	const [patientObjs, setPatientObjs] = useState<any[]>([]);
-	// const [quotes, setQuotes] = useState<any[]>([]);
 	const [searchValue, setSearchValue] = useState();
 	const [selectedQuote, setSelectedQuote] = useState<any>();
 	const [open, setOpen] = useState<boolean>(false);
@@ -48,7 +47,7 @@ function AdmissionView() {
 			if (patientQuotes !== undefined)
 				setSelectedQuote(patientQuotes[patientQuotes.length - 1]);
 			setOpen(true);
-		} else alert('Search record details unavailable1');
+		} else alert('Search Record Details Unavailable');
 	};
 
 	const onAdmitBtnClick = async () => {
@@ -56,6 +55,8 @@ function AdmissionView() {
 		if (updateQuote !== undefined) alert('Details Updated Successfully!');
 		window.open(window.location.origin + `/admission-counter`, '_self');
 	};
+
+	const onChange = (e: any) => {};
 
 	return (
 		<div>
