@@ -53,7 +53,7 @@ function AdmissionView() {
 	const onAdmitBtnClick = async () => {
 		const updateQuote = await updateQuotes(selectedQuote.id, true);
 		if (updateQuote !== undefined) alert('Details Updated Successfully!');
-		window.open(window.location.origin + `/admission-counter`, '_self');
+		window.open(window.location.origin + `/admission-counter/admit`, '_self');
 	};
 
 	const onChange = (e: any) => {};

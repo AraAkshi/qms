@@ -9,7 +9,10 @@ import {
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { getAllPatients } from '../../services/patient';
-import { getQuotesForPatient, updateQuotes } from '../../services/quote';
+import {
+	getQuotesForPatient,
+	updateQuotesWithDischarge,
+} from '../../services/quote';
 import Header from '../layout/Header';
 
 function DischargeView() {
@@ -19,9 +22,12 @@ function DischargeView() {
 	const [selectedQuote, setSelectedQuote] = useState<any>();
 	const [open, setOpen] = useState<boolean>(false);
 	const [formData, setFormData] = useState({
-		actualHospitalFee: 0,
-		actualConsultationFee: 0,
-		discount: 0,
+		actualHospitalFee:
+			selectedQuote !== undefined ? selectedQuote.actualHospitalFee : 0,
+		actualConsultationFee:
+			selectedQuote !== undefined ? selectedQuote.actualConsultationFee : 0,
+		discount:
+			selectedQuote !== undefined ? selectedQuote.actualConsultationFee : 0,
 	});
 
 	const { actualHospitalFee, actualConsultationFee, discount } = formData;
@@ -58,20 +64,30 @@ function DischargeView() {
 
 	const onChange = (e: any) => {
 		setFormData({ ...formData, [e.target.name]: e.target.value });
-		// if()
 	};
 
 	const onAdmitBtnClick = async () => {
-		const updateQuote = await updateQuotes(selectedQuote.id, true);
+		const updateQuote = await updateQuotesWithDischarge(
+			selectedQuote.id,
+			actualHospitalFee,
+			actualConsultationFee,
+			discount
+		);
 		if (updateQuote !== undefined) alert('Details Updated Successfully!');
-		window.open(window.location.origin + `/admission-counter`, '_self');
+		window.open(
+			window.location.origin + `/admission-counter/discharge`,
+			'_self'
+		);
 	};
 
 	const resetForm = () => {
 		setFormData({
-			actualHospitalFee: 0,
-			actualConsultationFee: 0,
-			discount: 0,
+			actualHospitalFee:
+				selectedQuote !== undefined ? selectedQuote.actualHospitalFee : 0,
+			actualConsultationFee:
+				selectedQuote !== undefined ? selectedQuote.actualConsultationFee : 0,
+			discount:
+				selectedQuote !== undefined ? selectedQuote.actualConsultationFee : 0,
 		});
 	};
 
@@ -207,7 +223,7 @@ function DischargeView() {
 												</TableCell>
 												<TableCell>
 													<div className='tbl-body'>
-														{selectedQuote.hospitalFee}
+														{selectedQuote.hospitalFee.toLocaleString('en-US')}
 													</div>
 												</TableCell>
 											</TableRow>
@@ -220,7 +236,9 @@ function DischargeView() {
 														<TextField
 															name='actualHospitalFee'
 															size='small'
-															value={selectedQuote.actualHospitalFee}
+															value={Number(actualHospitalFee).toLocaleString(
+																'en-US'
+															)}
 															onChange={(e) => onChange(e)}
 														/>
 													</div>
@@ -234,7 +252,9 @@ function DischargeView() {
 												</TableCell>
 												<TableCell>
 													<div className='tbl-body'>
-														{selectedQuote.consultationFee}
+														{selectedQuote.consultationFee.toLocaleString(
+															'en-US'
+														)}
 													</div>
 												</TableCell>
 											</TableRow>
@@ -249,7 +269,9 @@ function DischargeView() {
 														<TextField
 															name='actualConsultationFee'
 															size='small'
-															value={selectedQuote.actualConsultationFee}
+															value={Number(
+																actualConsultationFee
+															).toLocaleString('en-US')}
 															onChange={(e) => onChange(e)}
 														/>
 													</div>
@@ -261,8 +283,10 @@ function DischargeView() {
 												</TableCell>
 												<TableCell>
 													<div className='tbl-body'>
-														{selectedQuote.hospitalFee +
-															selectedQuote.consultationFee}
+														{(
+															Number(selectedQuote.hospitalFee) +
+															Number(selectedQuote.consultationFee)
+														).toLocaleString('en-US')}
 													</div>
 												</TableCell>
 											</TableRow>
@@ -273,9 +297,9 @@ function DischargeView() {
 												<TableCell>
 													<div className='tbl-body'>
 														<TextField
-															name='dicount'
+															name='discount'
 															size='small'
-															value={selectedQuote.discount}
+															value={Number(discount).toLocaleString('en-US')}
 															onChange={(e) => onChange(e)}
 														/>
 													</div>
@@ -287,9 +311,11 @@ function DischargeView() {
 												</TableCell>
 												<TableCell>
 													<div className='tbl-body'>
-														{selectedQuote.actualHospitalFee +
-															selectedQuote.actualConsultationFee -
-															selectedQuote.discount}
+														{(
+															Number(actualHospitalFee) +
+															Number(actualConsultationFee) -
+															Number(discount)
+														).toLocaleString('en-US')}
 													</div>
 												</TableCell>
 											</TableRow>
@@ -299,11 +325,13 @@ function DischargeView() {
 												</TableCell>
 												<TableCell>
 													<div className='tbl-body'>
-														{selectedQuote.actualHospitalFee +
-															selectedQuote.actualConsultationFee -
-															selectedQuote.discount -
-															selectedQuote.hospitalFee -
-															selectedQuote.consultationFee}
+														{(
+															Number(actualHospitalFee) +
+															Number(actualConsultationFee) -
+															Number(discount) -
+															Number(selectedQuote.hospitalFee) -
+															Number(selectedQuote.consultationFee)
+														).toLocaleString('en-US')}
 													</div>
 												</TableCell>
 											</TableRow>

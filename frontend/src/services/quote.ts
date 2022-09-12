@@ -42,6 +42,34 @@ export const updateQuotesWithPatient = async (id: any, patient: any) => {
 	}
 };
 
+//Update quote with discharge details
+export const updateQuotesWithDischarge = async (
+	id: any,
+	actualHospitalFee: number,
+	actualConsultationFee: number,
+	discount: number
+) => {
+	const response = await fetch(baseurl + 'quote/edit', {
+		method: 'POST',
+		headers: {
+			Accept: 'application/json',
+			'Content-Type': 'application/json',
+			// Authorization: token,
+		},
+		body: JSON.stringify({
+			id,
+			actualHospitalFee,
+			actualConsultationFee,
+			discount,
+		}),
+	});
+
+	if (response.status === 200 || response.status === 201) {
+		const data = await response.json();
+		return data;
+	}
+};
+
 //Add new quote
 export const addQuote = async (
 	patient: any,
