@@ -12,6 +12,7 @@ import {
 	editPackage,
 	getAllPackages,
 } from '../../services/package';
+import WordFlick from './WordFlick';
 
 function FileUpload() {
 	const [File, setFile] = useState<Blob | undefined>();
@@ -111,63 +112,74 @@ function FileUpload() {
 
 	return (
 		<div>
-			<Grid container direction='row' justifyContent='center' spacing={3}>
+			<Grid container direction='column' spacing={3}>
 				<Grid item>
-					<Grid container justifyContent='center'>
-						<label htmlFor='quotation'>
-							<input
-								style={{ display: 'none' }}
-								id='quotation'
-								type='file'
-								onChange={(e) => onFileUpload(e)}
-							/>
+					<Grid container direction='row' justifyContent='center' spacing={3}>
+						<Grid item>
+							<Grid container justifyContent='center'>
+								<label htmlFor='quotation'>
+									<input
+										style={{ display: 'none' }}
+										id='quotation'
+										type='file'
+										onChange={(e) => onFileUpload(e)}
+									/>
+									<Button
+										variant='contained'
+										size='small'
+										style={{
+											width: '14vw',
+											backgroundColor: '#414040',
+											color: '#fff',
+										}}
+										component='span'
+										endIcon={
+											Loading === 2 ? (
+												<CircularProgress size='1rem' />
+											) : Loading === 3 || Loading === 4 || Loading === 5 ? (
+												<CheckCircleOutlineIcon />
+											) : (
+												<PublishIcon fontSize='small' />
+											)
+										}
+									>
+										Upload File
+									</Button>
+								</label>
+							</Grid>
+						</Grid>
+						<Grid item>
 							<Button
 								variant='contained'
 								size='small'
 								style={{
-									width: '14vw',
-									backgroundColor: '#414040',
+									backgroundColor: isBtnHovered ? '#494949' : '#3c3c3d',
 									color: '#fff',
 								}}
-								component='span'
+								onMouseEnter={() => setHoverState()}
+								onMouseLeave={() => setHoverState()}
+								onClick={() => readFile()}
 								endIcon={
-									Loading === 2 ? (
+									Loading === 4 ? (
 										<CircularProgress size='1rem' />
-									) : Loading === 3 || Loading === 4 || Loading === 5 ? (
+									) : Loading === 5 ? (
 										<CheckCircleOutlineIcon />
 									) : (
-										<PublishIcon fontSize='small' />
+										true
 									)
 								}
 							>
-								Upload File
+								Save Data
 							</Button>
-						</label>
+						</Grid>
 					</Grid>
 				</Grid>
 				<Grid item>
-					<Button
-						variant='contained'
-						size='small'
-						style={{
-							backgroundColor: isBtnHovered ? '#494949' : '#3c3c3d',
-							color: '#fff',
-						}}
-						onMouseEnter={() => setHoverState()}
-						onMouseLeave={() => setHoverState()}
-						onClick={() => readFile()}
-						endIcon={
-							Loading === 4 ? (
-								<CircularProgress size='1rem' />
-							) : Loading === 5 ? (
-								<CheckCircleOutlineIcon />
-							) : (
-								true
-							)
-						}
-					>
-						Save Data
-					</Button>
+					{Loading === 5 ? (
+						<WordFlick textString={'Details Uploaded Successfully'} />
+					) : (
+						''
+					)}
 				</Grid>
 			</Grid>
 		</div>

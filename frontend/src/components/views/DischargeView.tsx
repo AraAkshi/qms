@@ -13,6 +13,7 @@ import {
 	getQuotesForPatient,
 	updateQuotesWithDischarge,
 } from '../../services/quote';
+import { thousandSeparator } from '../../utils/common';
 import Header from '../layout/Header';
 
 function DischargeView() {
@@ -23,11 +24,10 @@ function DischargeView() {
 	const [open, setOpen] = useState<boolean>(false);
 	const [formData, setFormData] = useState({
 		actualHospitalFee:
-			selectedQuote !== undefined ? selectedQuote.actualHospitalFee : '',
+			selectedQuote !== undefined ? selectedQuote.actualHospitalFee : 0,
 		actualConsultationFee:
-			selectedQuote !== undefined ? selectedQuote.actualConsultationFee : '',
-		discount:
-			selectedQuote !== undefined ? selectedQuote.actualConsultationFee : '',
+			selectedQuote !== undefined ? selectedQuote.actualConsultationFee : 0,
+		discount: selectedQuote !== undefined ? selectedQuote.discount : 0,
 	});
 
 	const { actualHospitalFee, actualConsultationFee, discount } = formData;
@@ -58,12 +58,22 @@ function DischargeView() {
 			const patientQuotes = await getQuotesForPatient(selectedPatient.id);
 			if (patientQuotes !== undefined)
 				setSelectedQuote(patientQuotes[patientQuotes.length - 1]);
+			setFormData({
+				actualHospitalFee:
+					patientQuotes[patientQuotes.length - 1].actualHospitalFee,
+				actualConsultationFee:
+					patientQuotes[patientQuotes.length - 1].actualConsultationFee,
+				discount: patientQuotes[patientQuotes.length - 1].discount,
+			});
 			setOpen(true);
 		} else alert('Search Record Details Unavailable');
 	};
 
 	const onChange = (e: any) => {
-		setFormData({ ...formData, [e.target.name]: e.target.value });
+		setFormData({
+			...formData,
+			[e.target.name]: e.target.value.toString().split(',').join(''),
+		});
 	};
 
 	const onAdmitBtnClick = async () => {
@@ -83,11 +93,10 @@ function DischargeView() {
 	const resetForm = () => {
 		setFormData({
 			actualHospitalFee:
-				selectedQuote !== undefined ? selectedQuote.actualHospitalFee : '',
+				selectedQuote !== undefined ? selectedQuote.actualHospitalFee : 0,
 			actualConsultationFee:
-				selectedQuote !== undefined ? selectedQuote.actualConsultationFee : '',
-			discount:
-				selectedQuote !== undefined ? selectedQuote.actualConsultationFee : '',
+				selectedQuote !== undefined ? selectedQuote.actualConsultationFee : 0,
+			discount: selectedQuote !== undefined ? selectedQuote.discount : 0,
 		});
 	};
 
@@ -213,7 +222,9 @@ function DischargeView() {
 												</TableCell>
 												<TableCell>
 													<div className='tbl-body'>
-														{selectedQuote.remarks ? selectedQuote.remarks : ''}
+														{selectedQuote.remark
+															? selectedQuote.remark.toUpperCase()
+															: ''}
 													</div>
 												</TableCell>
 											</TableRow>
@@ -223,7 +234,9 @@ function DischargeView() {
 												</TableCell>
 												<TableCell>
 													<div className='tbl-body'>
-														{selectedQuote.hospitalFee.toLocaleString('en-US')}
+														{`LKR ${thousandSeparator(
+															selectedQuote.hospitalFee
+														)}`}
 													</div>
 												</TableCell>
 											</TableRow>
@@ -236,9 +249,7 @@ function DischargeView() {
 														<TextField
 															name='actualHospitalFee'
 															size='small'
-															value={Number(actualHospitalFee).toLocaleString(
-																'en-US'
-															)}
+															value={thousandSeparator(actualHospitalFee)}
 															onChange={(e) => onChange(e)}
 														/>
 													</div>
@@ -252,9 +263,9 @@ function DischargeView() {
 												</TableCell>
 												<TableCell>
 													<div className='tbl-body'>
-														{selectedQuote.consultationFee.toLocaleString(
-															'en-US'
-														)}
+														{`LKR ${thousandSeparator(
+															selectedQuote.consultationFee
+														)}`}
 													</div>
 												</TableCell>
 											</TableRow>
@@ -269,9 +280,7 @@ function DischargeView() {
 														<TextField
 															name='actualConsultationFee'
 															size='small'
-															value={Number(
-																actualConsultationFee
-															).toLocaleString('en-US')}
+															value={thousandSeparator(actualConsultationFee)}
 															onChange={(e) => onChange(e)}
 														/>
 													</div>
@@ -283,10 +292,10 @@ function DischargeView() {
 												</TableCell>
 												<TableCell>
 													<div className='tbl-body'>
-														{(
-															Number(selectedQuote.hospitalFee) +
-															Number(selectedQuote.consultationFee)
-														).toLocaleString('en-US')}
+														{`LKR ${thousandSeparator(
+															selectedQuote.hospitalFee +
+																selectedQuote.consultationFee
+														)}`}
 													</div>
 												</TableCell>
 											</TableRow>
@@ -299,7 +308,7 @@ function DischargeView() {
 														<TextField
 															name='discount'
 															size='small'
-															value={Number(discount).toLocaleString('en-US')}
+															value={thousandSeparator(discount)}
 															onChange={(e) => onChange(e)}
 														/>
 													</div>
@@ -311,11 +320,11 @@ function DischargeView() {
 												</TableCell>
 												<TableCell>
 													<div className='tbl-body'>
-														{(
-															Number(actualHospitalFee) +
-															Number(actualConsultationFee) -
-															Number(discount)
-														).toLocaleString('en-US')}
+														{`LKR ${thousandSeparator(
+															actualHospitalFee +
+																actualConsultationFee -
+																discount
+														)}`}
 													</div>
 												</TableCell>
 											</TableRow>
@@ -325,13 +334,13 @@ function DischargeView() {
 												</TableCell>
 												<TableCell>
 													<div className='tbl-body'>
-														{(
-															Number(actualHospitalFee) +
-															Number(actualConsultationFee) -
-															Number(discount) -
-															Number(selectedQuote.hospitalFee) -
-															Number(selectedQuote.consultationFee)
-														).toLocaleString('en-US')}
+														{`LKR ${thousandSeparator(
+															actualHospitalFee +
+																actualConsultationFee -
+																discount -
+																selectedQuote.hospitalFee -
+																selectedQuote.consultationFee
+														)}`}
 													</div>
 												</TableCell>
 											</TableRow>

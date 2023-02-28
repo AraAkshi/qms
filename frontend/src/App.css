@@ -168,3 +168,10 @@ body {
 	text-transform: uppercase;
 	letter-spacing: 0.08em;
 }
+
+.sub-text{
+	font-size: 1rem;
+	font-family: monospace;
+	color: #055205;
+	text-align: center;
+}
