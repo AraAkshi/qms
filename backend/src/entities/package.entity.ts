@@ -16,11 +16,11 @@ export class PackageEntity {
   @Column({ type: 'varchar', nullable: true })
   packageName: string;
 
-  @Column({ type: 'float' })
+  @Column({ type: 'float', nullable: true })
   hospitalFee: number;
 
-  @Column({ type: 'varchar', nullable: true })
-  bedCategory: string;
+  @Column({ type: 'float', nullable: true })
+  consultantFee: number;
 
   @Column({ default: new Date() })
   createdDate: Date;

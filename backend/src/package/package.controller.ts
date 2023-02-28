@@ -47,7 +47,7 @@ export class PackageController {
       surgery: any;
       packageName: string;
       hospitalFee: number;
-      bedCategory: string;
+      consultantFee: number;
     },
   ): Promise<PackageEntity> {
     return await this.service.addpackage(data);
@@ -62,7 +62,7 @@ export class PackageController {
       surgery?: any;
       packageName?: string;
       hospitalFee?: number;
-      bedCategory?: string;
+      consultantFee?: number;
       id: number;
     },
   ): Promise<PackageEntity> {

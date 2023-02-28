@@ -52,7 +52,7 @@ export class PackageService {
     surgery: any;
     packageName: string;
     hospitalFee: number;
-    bedCategory: string;
+    consultantFee: number;
   }): Promise<PackageEntity> {
     const res = this.repo.create(data);
     await this.repo.save(res);
@@ -68,17 +68,17 @@ export class PackageService {
     surgery?: any;
     packageName?: string;
     hospitalFee?: number;
-    bedCategory?: string;
+    consultantFee?: number;
     id: number;
   }): Promise<PackageEntity> {
     const res = await this.repo.findOne({ where: { id: data.id } });
-    const { surgeon, surgery, packageName, hospitalFee, bedCategory } = data;
+    const { surgeon, surgery, packageName, hospitalFee, consultantFee } = data;
 
     if (surgeon) res.surgeon = surgeon;
     if (surgery) res.surgery = surgery;
     if (packageName) res.packageName = packageName;
     if (hospitalFee) res.hospitalFee = hospitalFee;
-    if (bedCategory) res.bedCategory = bedCategory;
+    if (consultantFee) res.consultantFee = consultantFee;
 
     await this.repo.save(res);
     this.logger.log(`Successfully Updated details of package - ${res.id}`);

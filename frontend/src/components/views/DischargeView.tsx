@@ -23,11 +23,11 @@ function DischargeView() {
 	const [open, setOpen] = useState<boolean>(false);
 	const [formData, setFormData] = useState({
 		actualHospitalFee:
-			selectedQuote !== undefined ? selectedQuote.actualHospitalFee : 0,
+			selectedQuote !== undefined ? selectedQuote.actualHospitalFee : '',
 		actualConsultationFee:
-			selectedQuote !== undefined ? selectedQuote.actualConsultationFee : 0,
+			selectedQuote !== undefined ? selectedQuote.actualConsultationFee : '',
 		discount:
-			selectedQuote !== undefined ? selectedQuote.actualConsultationFee : 0,
+			selectedQuote !== undefined ? selectedQuote.actualConsultationFee : '',
 	});
 
 	const { actualHospitalFee, actualConsultationFee, discount } = formData;
@@ -83,11 +83,11 @@ function DischargeView() {
 	const resetForm = () => {
 		setFormData({
 			actualHospitalFee:
-				selectedQuote !== undefined ? selectedQuote.actualHospitalFee : 0,
+				selectedQuote !== undefined ? selectedQuote.actualHospitalFee : '',
 			actualConsultationFee:
-				selectedQuote !== undefined ? selectedQuote.actualConsultationFee : 0,
+				selectedQuote !== undefined ? selectedQuote.actualConsultationFee : '',
 			discount:
-				selectedQuote !== undefined ? selectedQuote.actualConsultationFee : 0,
+				selectedQuote !== undefined ? selectedQuote.actualConsultationFee : '',
 		});
 	};
 
