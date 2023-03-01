@@ -176,7 +176,7 @@ function MarketingView() {
 		<div>
 			<Header />
 			<Grid container direction='row' justifyContent='space-evenly'>
-				<Grid item xs={8}>
+				<Grid item xs={12}>
 					<div className='main-container'>
 						<div className='card-container-outer'>
 							<div className='card-container-header'>SURGERY PACKAGES</div>

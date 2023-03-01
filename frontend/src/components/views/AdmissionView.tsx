@@ -101,7 +101,7 @@ function AdmissionView() {
 									<TableContainer
 										style={{
 											maxHeight: '60vh',
-											width: '50vw',
+											// width: '50vw',
 											margin: 'auto',
 											overflowY: 'auto',
 										}}

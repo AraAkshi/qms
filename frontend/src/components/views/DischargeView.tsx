@@ -146,7 +146,7 @@ function DischargeView() {
 									<TableContainer
 										style={{
 											maxHeight: '42vh',
-											width: '50vw',
+											// width: '50vw',
 											margin: 'auto',
 											overflowY: 'auto',
 										}}

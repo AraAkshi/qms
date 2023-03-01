@@ -1,8 +1,10 @@
 body {
   margin:0;
   padding: 0;
-  background-color: #e5e4e4;
-	/* background: linear-gradient(to top, #2980b9, #6dd5fa, #ffffff); */
+  /* background-color: #e5e4e4; */
+	background-image: url("./images/hospital-bg.jpg"), linear-gradient(rgba(255, 255, 255, 0.8),rgba(255, 255, 255, 0.5));
+	background-blend-mode: screen;
+	background-repeat: round;
   height: 100vh;
   width: 100%;
 }
@@ -32,21 +34,22 @@ body {
 
 .main-container {
 	margin: auto;
-	margin-top: 2rem;
+	margin-top: 1rem;
 	padding: 1rem 2rem;
 	/* width: auto; */
 }
 
 .card-container-outer {
-	background-color: #fff;
+	margin: auto;
+	background-color: rgba(255, 255, 255, 0.9);
 	padding: 0rem;
-	box-shadow: rgba(46, 46, 46, 0.16) 0px 3px 6px,
-		rgba(59, 58, 58, 0.23) 0px 3px 6px;
+	/* box-shadow: rgba(46, 46, 46, 0.16) 0px 3px 6px,
+		rgba(59, 58, 58, 0.23) 0px 3px 6px; */
 	color: #333;
 	border-radius: 0.5em;
-	min-height: 25vh;
+	min-height: 50vh;
 	max-height: 80vh;
-	width: 100%;
+	width: 60%;
 }
 
 .card-container-header {
